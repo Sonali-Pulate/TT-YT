@@ -1,7 +1,7 @@
 """
 ████████╗████████╗          ██╗   ██╗████████╗
 ╚══██╔══╝╚══██╔══╝          ╚██╗ ██╔╝╚══██╔══╝
-   ██║      ██║    ███████   ╚████╔╝    ██║   
+   ██║      ██║    ██████╗   ╚████╔╝    ██║   
    ██║      ██║    ╚═════╝    ╚██╔╝     ██║   
    ██║      ██║                ██║      ██║   
    ╚═╝      ╚═╝                ╚═╝      ╚═╝   
@@ -29,7 +29,6 @@ SeleniumHQ - selenium - https://github.com/SeleniumHQ/selenium
 
 
 import urllib.request
-import os
 import logging
 from typing import Dict, List
 import logging
@@ -48,11 +47,15 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from random import randint
+import os
+import subprocess
 
 from upload_video import get_authenticated_service, initialize_upload
 from video_downloader import downloader
 
 currentpath = os.getcwd()
+
+
 
 def main():
     
@@ -65,39 +68,41 @@ def main():
         if int(option) == 2:  
             youtube = get_authenticated_service()
 
-            try:
-                title, description, file = downloader(False)
-                print("Starting upload...")
-                initialize_upload(youtube, dict(
-                    file=file,
-                    privacyStatus="public",
-                    category="22",
-                    keywords="",
-                    description=description,
-                    title=title
-                ))
-                # os.remove("abc.mp4") #f'{username}-{id}.mp4')
-            except:
-                print(231)
-                raise
+            for list in downloader(False):
+                try:
+                    print("Starting upload...")
+                    initialize_upload(youtube, dict(
+                        file="videos/"+list,
+                        privacyStatus="public",
+                        category="22",
+                        keywords="",
+                        description=list.replace(".mp4", ""),
+                        title=list.replace(".mp4", "")
+                    ))
+                    print(list, list.replace(".mp4",""))
+                    # os.remove("abc.mp4") #f'{username}-{id}.mp4')
+                except:
+                    print(231)
+                    raise
         elif int(option) == 1: 
             youtube = get_authenticated_service()
 
-            try:
-                title, description, file  = downloader(True)
-                print("Starting upload...")
-                initialize_upload(youtube, dict(
-                    file=file,
-                    privacyStatus="public",
-                    category="22",
-                    keywords=description,
-                    description=description,
-                    title=title
-                ))
-                # os.remove("abc.mp4") #f'{username}-{id}.mp4')
-            except:
-                print(231)
-                raise
+            for list in downloader(True):
+                try:
+                    print("Starting upload...")
+                    initialize_upload(youtube, dict(
+                        file="videos/"+list,
+                        privacyStatus="public",
+                        category="22",
+                        keywords="",
+                        description=list.replace(".mp4", ""),
+                        title=list.replace(".mp4", "")
+                    ))
+                    print(list, list.replace(".mp4",""))
+                    # os.remove("abc.mp4") #f'{username}-{id}.mp4')
+                except:
+                    print(231)
+                    raise
         else:
             print("Invalid option, please select")
             
